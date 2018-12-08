@@ -6,13 +6,12 @@ import java.awt.CardLayout
 
 data class Claim(val id: Int, val x: Int, val w: Int, val y: Int, val h: Int)
 
+val claimRegex = """#(?<id>\d+) @ (?<xpos>\d+),(?<ypos>\d+): (?<w>\d+)x(?<h>\d+)""".toRegex()
 /**
  * input example: "#1 @ 1,3: 4x4"
  */
 fun Claim(line: String): Claim {
-    val match =
-        """#(?<id>\d+) @ (?<xpos>\d+),(?<ypos>\d+): (?<w>\d+)x(?<h>\d+)""".toRegex()
-            .matchEntire(line)
+    val match = claimRegex.matchEntire(line)
 
     val x = match!!.groups["xpos"]!!.value.toInt()
     val w = match.groups["w"]!!.value.toInt()

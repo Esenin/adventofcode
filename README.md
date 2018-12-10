@@ -7,4 +7,4 @@ I'm new to that language. Let's see how far this is going to bring me.
 You will be able to see how my code is hopefully improving from one task to another. 
 
 In this repo only my solutions are availible.
-To see problems' statements consider visiting: https://adventofcode.com/2018
+To see problem statements consider visiting: https://adventofcode.com/2018

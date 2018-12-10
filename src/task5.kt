@@ -1,3 +1,5 @@
+package task5
+
 import org.junit.jupiter.api.Test
 import java.io.File
 import kotlin.system.measureTimeMillis

@@ -1,3 +1,5 @@
+package task4
+
 import org.junit.jupiter.api.Test
 import java.io.File
 import kotlin.test.assertEquals

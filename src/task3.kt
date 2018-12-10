@@ -1,3 +1,5 @@
+package task3
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.io.File
 import org.junit.jupiter.api.Test

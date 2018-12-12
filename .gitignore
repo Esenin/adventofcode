@@ -39,4 +39,6 @@ build/
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/.name
 kotlin-ultimate/
+*~
+.attach_pid*
 

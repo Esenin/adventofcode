@@ -13,10 +13,11 @@ data class Vector (val x: Int, val y: Int)
 typealias Point = Vector
 typealias Velocity = Vector
 
-// L2 + L1
+const val A: Double = 1.5
+// A * L2 + L1
 fun Point.distanceTo(other: Point): Double =
     (abs(this.x - other.x) to abs(this.y - other.y)).let { (dx, dy) ->
-        sqrt(dx * dx + dy * dy.toDouble()) + (dx + dy)
+        A * sqrt(dx * dx + dy * dy.toDouble()) + (dx + dy)
     }
 
 data class LightPoint (val pos: Point, val velocity: Velocity)
@@ -66,8 +67,12 @@ class Configuration (val pointsOfLight: Collection<LightPoint>) {
         }
     }
 
+    private var score: Double? = null
     val getScore: Double
         get() {
+            if (score != null) {
+                return score!!
+            }
             val points = getPoints()
             var result: Double = 0.0
             for (center in points) {
@@ -75,6 +80,7 @@ class Configuration (val pointsOfLight: Collection<LightPoint>) {
                     result += distances.take(distances.size / 5).sum()
                 }
             }
+            score = result
             return result
         }
 
@@ -92,8 +98,9 @@ class Configuration (val pointsOfLight: Collection<LightPoint>) {
     }
 
     fun toString(scale: Int = defaultResolution): String {
+        val scoreStr = "%.2f".format(getScore)
+        val builder = StringBuilder("Configuration's score: $scoreStr")
         val field = toMatrix(scale)
-        val builder = StringBuilder()
         for (line in field) {
             if (builder.isNotEmpty())
                 builder.append('\n')
@@ -110,10 +117,12 @@ class Configuration (val pointsOfLight: Collection<LightPoint>) {
 fun parseConfiguration(lines: List<String>): Configuration =
     Configuration(lines.mapTo(ArrayList(), ::LightPoint))
 
-
+/**
+ * Analytical solution how to find text
+ */
 fun solvePartOne(lines: List<String>) {
-    val maxSteps = 800
-    val bestStates = PriorityQueue<Configuration>(compareBy { it.getScore })
+    val maxSteps = 1200
+    val bestStates = PriorityQueue<Configuration>(compareBy { -it.getScore })
     var configuration = parseConfiguration(lines)
     println(configuration)
     println("".padEnd(120, '|'))
@@ -121,52 +130,19 @@ fun solvePartOne(lines: List<String>) {
 
     repeat(maxSteps) {
         bestStates.add(configuration)
-        if (bestStates.size > 5) {
+        if (bestStates.size > 3) {
             bestStates.poll()
         }
-        configuration = configuration.nextConfiguration(80)
-
-        if (it == 100) {
-            println(configuration)
-            println("".padEnd(120, '|'))
-            println("")
-        }
+        configuration = configuration.nextConfiguration(10)
     }
 
-    println("Best met configurations:")
+    println("Best configuration:")
     while (bestStates.isNotEmpty()) {
         val c = bestStates.poll()
         println(c)
         println("".padEnd(120, '|'))
         println("")
     }
-}
-
-fun watchProgress(lines: List<String>) {
-    var configuration = parseConfiguration(lines)
-    val maxSteps = 1200
-    repeat(maxSteps) {
-        val sleepTime =
-            when {
-                it > 1066 -> 100L
-                it > 1061 -> 800L
-                it > 1059 -> 600L
-                it > 1050 -> 100L
-                else -> 50L
-            }
-        if (it < 10 || it > maxSteps * 8 / 10)
-        {
-            println("Step $it. Sleeptime = $sleepTime ::")
-            println(configuration)
-//        println("".padEnd(120, '|'))
-            println("")
-            System.out.flush()
-            Thread.sleep(sleepTime)
-            print("\u001b[H\u001b[2J")
-        }
-        configuration = configuration.nextConfiguration(10)
-    }
-
 }
 
 // Tests ///////////////////////////////////////////////////////////////////////////////////////////
@@ -203,6 +179,5 @@ fun main(args: Array<String>) {
 
     val input = File("input.txt").readLines()
 
-    watchProgress(input)
-//    solvePartOne(input)
+    solvePartOne(input)
 }

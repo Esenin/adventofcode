@@ -32,10 +32,8 @@ class RunningSquare(
     private val sideSize: Int = 3,
     val pos: Point = Point(1, 1)
 ) {
-    val power: Int
-        get() = power_
-
-    private var power_: Int = 0
+    var power: Int = 0
+        private set
 
     init {
         assert(pos.x in 1..grid.gridSize - sideSize + 1)
@@ -43,7 +41,7 @@ class RunningSquare(
 
         for (y in pos.y until pos.y + sideSize) {
             for (x in pos.x until pos.x + sideSize) {
-                power_ += grid.at(x, y)
+                power += grid.at(x, y)
             }
         }
     }
@@ -57,8 +55,8 @@ class RunningSquare(
         val xNew = if (goRight) pos.x + sideSize else pos.x - 1
 
         for (yi in pos.y until pos.y + sideSize) {
-            power_ -= grid.at(xPrev, yi)
-            power_ += grid.at(xNew, yi)
+            power -= grid.at(xPrev, yi)
+            power += grid.at(xNew, yi)
         }
         pos.x += if (goRight) +1 else -1
     }
@@ -66,8 +64,8 @@ class RunningSquare(
     fun stepDown() {
 
         for (x in pos.x until pos.x + sideSize) {
-            power_ -= grid.at(x, pos.y)
-            power_ += grid.at(x, pos.y + sideSize)
+            power -= grid.at(x, pos.y)
+            power += grid.at(x, pos.y + sideSize)
         }
         pos.y += 1
     }
